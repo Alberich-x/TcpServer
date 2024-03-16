@@ -1,0 +1,451 @@
+\documentclass[11pt]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{hyperref}
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+ backgroundcolor=\color{lightgray}, 
+ basicstyle = \footnotesize,       
+ breakatwhitespace = false,        
+ breaklines = true,                 
+ captionpos = b,                    
+ commentstyle = \color{mygreen}\bfseries,
+ extendedchars = false,             
+ frame =shadowbox, 
+ framerule=0.5pt,
+ keepspaces=true,
+ keywordstyle=\color{blue}\bfseries, % keyword style
+ language = C++,                     % the language of code
+ otherkeywords={string}, 
+ numbers=left, 
+ numbersep=5pt,
+ numberstyle=\tiny\color{mygray},
+ rulecolor=\color{black},         
+ showspaces=false,  
+ showstringspaces=false, 
+ showtabs=false,    
+ stepnumber=1,         
+ stringstyle=\color{mymauve},        % string literal style
+ tabsize=2,          
+ title=\lstname                      
+}
+
+\hypersetup{}
+
+\pagestyle{fancy}
+%\fancyhead[C]{\slshape \leftmark}
+\fancyhead[R]{note}
+\fancyfoot[C]{\thepage}
+
+\allowdisplaybreaks[4]
+
+\graphicspath{{figure/}}
+
+
+
+\begin{document}
+\tableofcontents
+
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\section{Qt部件}
+\subsection{connect}
+\begin{itemize}
+
+\item 三种响应槽函数的方式, 见
+\href{https://doc.qt.io/qt-6/qobject.html#connect}{
+\textcolor{blue}{文档}}
+\end{itemize}
+
+
+
+
+\subsection{ItemFlags}
+\begin{itemize}
+\item Qt::NoItemFlags()
+\item Qt::ItemIsSelectable()
+\item Qt::ItemIsEditable()
+\item Qt::ItemIsDragEnable()
+\item Qt::ItemIsDropEnable()
+\item Qt::ItemIsUserCheckable()
+\item Qt::ItemIsEnabled()
+\item Qt::ItemNeverHasChildren()
+\end{itemize}
+
+
+\subsection{QString}
+\begin{itemize}
+\item QString::arg(): 将字符内的\verb|'%N'|转换为arg内的数据.
+\end{itemize}
+
+
+
+
+\subsection{tableView}
+\begin{itemize}
+\item \verb|tableview->selectionModel()->seclectIndexes():|返回一个QModelIndexList对象，实现返回一个选中对象的index.
+\item \verb|setItem(row, column, QStandardItem)|:根据行列号更改数据.
+\end{itemize}
+
+
+
+\subsection{QFile}
+\begin{itemize}
+\item \href{https://doc.qt.io/qt-6/qudpsocket.html#details}{
+\textcolor{blue}{文档}}
+\item 定义:\verb|QFile *file = new QFile()|
+\item 新建文件:\verb|QFile(filename|
+\item \verb|:open(QIODeviceBase::OpenMode mode)|:打开文件,并选择对文件处理的方式.
+\item \verb|qint64 QIODevice::write()|::写入文件.
+\item \verb||
+\end{itemize}
+
+\subsection{QFileDialog}
+\begin{itemize}
+\item \verb|void QFileDialog::selectFile(const QString &filename)|:选择一个文件.
+\item \verb|void QFileDialog::selectNameFilter(const QString &filter)|选择一个filter
+\item \verb|getExistingDirectory(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = ShowDirsOnly)|
+\end{itemize}
+
+\subsection{QDir}
+\begin{itemize}
+\item \href{https://doc.qt.io/qt-6/qdir.html#homePath}{
+\textcolor{blue}{文档}}
+\item homepath():返回绝对地址.
+\item entryInfoList():返回QFileInfoList对象, 需要选择筛选目录.
+\end{itemize}
+
+\newpage
+
+
+
+\section{Qt5 布局管理}
+\subsection{堆栈窗体}
+\begin{verbatim}
+QStackedWidget:
+connect(list, SIGNAL(currentRowChanged(int)), stack, SLOT(setCurrentIndex(int)));
+currentRowChanged:这个信号在用户选择或者改变了部件中当前项的时候被触发。它会发送两个参数，第一个参数是新的当前行的索引，第二个参数是旧的当前行的索引。
+setCurrentIndex(int):是一个用于在 Qt 中切换 QStackedWidget 中当前显示页面的方法.
+添加正则表达式:
+QRegExp regexp("[A-Za-z]");
+ui->lineEdit->syValidator(new QRegExpValidator(regExp,this));
+QRegExp regexp(筛选的对象, 大小写敏感程度, 筛选方式)
+
+\end{verbatim}
+\pagebreak
+\subsection{基本布局(了解即可)}
+\begin{verbatim}
+QFrame:Panel:是一种简单的边框样式，通常用于突出显示或者分隔不同的部分。
+QFrame:Raised:凸起。
+QFrame:Box:实心的边框。
+QFrame:Plain:无阴影。
+QFrame:Sunken:它表示一个凹陷的边框效果，通常用于突出显示或者分隔不同的部分。
+
+QGridLayout:
+setColumnStretch:是用于设置 QBoxLayout（包括 QHBoxLayout 和 QVBoxLayout）中
+子部件列的拉伸因子的方法。
+\end{verbatim}
+
+\newpage
+
+\section{模型}
+\footnote{u8"中文"可以避免乱码}
+\subsection{标准基本对话框}
+
+\begin{verbatim}
+QFileDialog://获取用户选择的文件名，保存的文件名，已存在的目录名，文件名列表
+getOpenFileName(),getSaveFileName(),getExistingDirectory(),getOpenFileNames
+QColorDialog,QFontDialog://获取颜色值，字体
+getColor(),getFont()
+QInputDialog://标准输入对话框，下拉表条目输入框，int输入框，double类型输入框
+getText(),getItem(),getInt(),getDouble()
+QMessageBox:
+question,information,warning,critical,about,aboutQt
+\end{verbatim}
+\newpage
+
+\section{TableView}
+\begin{itemize}
+\item ShowGrid():显示网格.
+\item QStandardItemModel:是 Qt 中用于存储结构化数据的模型类之一。它提供了一个表格式的数据结构，可以在其中存储数据.
+\item setHorizontalHeaderLabels(model):用于设置表格视图的水平（列）表头标签.
+\item setModel（model）:将数据模型赋值给表格.
+\item setItem(int, int, new StandardItem):添加新数据进表格.
+\item setEditTriggers(state):设置可编辑性。
+\item QAbstractItemView:提供了一种通用的方法来管理模型中的数据.
+\item AllEditTriggers, NoEditTriggers:处于是否可编辑的状态.
+\item QModelIndexList: 用于存储QModelIndex对象的容器类.
+\item selectionModel()-selectedIndexes():可以获取选中的数据格.
+\item 
+\begin{verbatim}
+T qobject_cast<T>(QObject* object):将父类指针安全地转换为子类指针，
+\end{verbatim}
+\end{itemize}
+
+
+
+\subsection{实现双击tableView触发事件}
+\begin{verbatim}
+connect(ui->tableView, &QTableView::doubleClicked, this, &MainWindow::openEditPage);
+//选择发送对象tableView, 再选择触发事件QTableView::doubleClicked,最后指定触发函数.
+\end{verbatim}
+
+
+\subsection{Model}
+
+\subsubsection{QAbstractItemModel(原型)}
+主要用于自定义自己的数据结构
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-5/qabstractitemmodel.html}{
+\textcolor{blue}{文档}}
+\item 行列相关:RowCount(),InsertRows(),removeRows().
+\item \begin{verbatim}
+bool QAbstractItemModel::setData(const QModelIndex &index, 
+const QVariant &value, int role = Qt::EditRole)
+\end{verbatim}
+\item \begin{verbatim}
+QAbstractItemModel::flags(const QModelIndex &index) const
+:返回部件状态.
+\end{verbatim}
+\item headerData(), headerDataChanged():设置表头,见文档
+\item
+
+
+\end{itemize}
+
+
+
+\subsubsection{QStandardItemModel}
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-6/qstandarditemmodel.html#details}{
+\textcolor{blue}{文档}}
+\item \verb|appendRow(const QList<QStandardItem *> &items)):添加一行数据;|
+\item \verb|item(int row, int column = 0):根据行列查询数据|
+\item setItem(int row, int column, QStandardItem *item):根据行列设置,设置数据.
+\item setRowcount(int rows):将会遗弃比设置行号大的数据.
+\item setHorizontalHeaders(int row, QStandardItem *item):设置垂直或者平行表头.
+\item clear():清理所有表内数据.
+\item data():参考QAbstractItemModel.data():返回一个index指定的数据.
+\item 1
+
+
+
+\end{itemize}
+使用model创建实例:
+\begin{lstlisting}
+QStandardItemModel model(4, 4);
+for (int row = 0; row < model.rowCount(); ++row) {
+    for (int column = 0; column < model.columnCount(); ++column) {
+        QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
+        model.setItem(row, column, item);
+    }
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+\subsubsection{QModelIndex}
+\begin{itemize}
+\item 存储一个可被QAbstractItemModel使用的index.
+\end{itemize}
+
+
+
+
+
+
+\subsubsection{QSelectionModel}
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-5/qitemselectionmodel.html#columnIntersectsSelection}{
+\textcolor{blue}{文档}}
+\item isColumnSelected():
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\subsubsection{QSortFilterModel}
+筛选tableView的流程
+\begin{enumerate}
+\item 创建QSortFilterModel对象
+\item 设置父model
+\item 将tableView的model设置为QSortFilterModel对象
+\item setFilterKeyColumn(),-1时为全选
+\item 设置正则表达式，以及筛选对象等，使用setFilterRegExp.使用QRegExp对象
+\end{enumerate}
+
+
+
+\newpage
+\section{连接数据库}
+\subsection{准备工作}
+\begin{enumerate}
+\item 
+\begin{verbatim}lib/libmysql.dll放入msvc2013_64/bin中
+\end{verbatim}
+\item 
+\begin{verbatim}
+Src\qtbase\src\plugins\sqldrivers\mysql\mysql.pro修改配置
+添加INLUDEPATH:mySQL文件下的INCLUDE目录
+添加LIB: 添加lib\libmysql.lib
+使用MSVC编译得到的dll文件复制到QT\QT5\5.14.1\msvc2017_64\plugins\sqldrivers
+\end{verbatim}
+\end{enumerate}
+
+
+
+\subsection{建立数据库连接}
+\begin{enumerate}
+\item 设置数据库类型
+\item 设置数据库主机名
+\item 设置数据库用户名
+\item 设置数据库密码
+\item 打开连接
+\end{enumerate}
+
+
+\subsection{访问数据库}
+
+
+
+\subsubsection{QSqlQuery}
+封装了访问修改执行数据库所需的一些函数.\\
+声明:
+\begin{lstlisting}
+QSqlQuery query("SELECT * FROM DATABASE");
+\end{lstlisting}
+\begin{itemize}
+\item next(): 访问下一个record.
+\item prepare(const QString \& query): 存储一条指令,遇到exec()才会执行.
+\item \verb|lastError()->TEXT():输出最后一条错误.|
+\end{itemize}
+
+\subsubsection{数据库语言}
+\begin{verbatim}
+新增:
+"INSERT INTO table (value1) VALUES (yourvalue)"
+查找:
+"SECLECT * FROM table WHERE **"
+修改:
+"UPDATE table SET value1 = yourvalue"
+删除:
+"DELETE FROM table WHERE **"
+\end{verbatim}
+\newpage
+
+
+\section{多线程}
+\subsection{QMutex类}
+\begin{itemize}
+\item mutex.lock():直到调用unlock为止，线程会被阻塞.
+\item mutex.tryLock():如果已经被锁定则立即返回.
+\end{itemize}
+
+\subsection{QMutexLocker类}
+\begin{itemize}
+\item 在析构函数中会解锁这个互斥量.
+\end{itemize}
+
+\subsection{QThread类}
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-6/qthread.html#details}{
+\textcolor{blue}{文档}}
+\item started(),finished(): 将在线程创建时发出信号.
+\item run():将在创建后进行run()
+\item exit(),finish(): 终止线程.
+\item wait(): 将线程设置为阻塞态.
+\item sleep(): 将线程设置为休眠态.
+\end{itemize}
+
+
+\subsection{QSemaphore}
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-5/qsemaphore.html#details}{
+\textcolor{blue}{文档}}
+\item acquire():对对象使用P信号.
+\item release():对对象使用V信号.
+\end{itemize}
+
+
+\section{Qt网络与通信}
+\subsection{QAbstractSocket类}
+\href{https://doc.qt.io/qt-6/qabstractsocket.html}{
+\textcolor{blue}{文档}}
+
+
+
+
+
+\subsection{UDP协议传输}
+\subsubsection{QUdpSocket类}
+\begin{itemize}
+\item 
+\href{https://doc.qt.io/qt-6/qudpsocket.html#details}{
+\textcolor{blue}{文档}}
+\item writeDatagram():指定端口和主机号后发送信息.
+\item hasPendingDatagrams(): 如果收到至少一条信息, 返回true.
+\item readDatagram():读取接收的数据.
+\end{itemize}
+
+\subsection{TCP协议传输}
+
+
+\subsection{QDataStream类}
+\begin{itemize}
+\item 定义:
+\begin{verbatim}
+QDataStream::QDataStream(),QDataStream::QDataStream(QIODevice *d)
+\end{verbatim}
+\item 使用\verb|>>或者<<|将数据传入一个类型内, DataStream内的数据对应减少类型的位数.
+\end{itemize}
+
+
+\subsection{文件传输流程}
+传输方:
+\begin{enumerate}
+\item 建立连接, 使用ByteWritten的方式进行传输.
+\item 选择文件后记录文件大小,文件名大小和文件名, 使用二进制数组传入socket.
+\item 将剩下的文件使用read(qmin())的形式,分段读取并传送.(使用ByteWritten信号)
+\item 在确认传输数据大小与已传输数据大小相等后完成传输.
+\end{enumerate}
+接收方:
+\begin{enumerate}
+\item 建立连接, 使得QDateStream连接socket, 接收到二进制数据
+\item 首先接收文件名字和文件大小等, 新建一个新的文件.
+\item 接接收文件数据本体, 并分段写入文件, 同时记录文件传输进度.(使用readyRead信号)
+\item 在确认文件需传送大小与已经传送大小相等时, 记录.\footnote{可能发生粘包, 需要拆包}
+\end{enumerate}
+
+
+
+\end{document}
+
+
+
